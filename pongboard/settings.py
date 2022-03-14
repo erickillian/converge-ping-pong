@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 DEFAULT_ALLOWED_HOSTS = '127.0.0.1 localhost 0.0.0.0'
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', DEFAULT_ALLOWED_HOSTS).split(' ')
+ALLOWED_HOSTS = ['converge-ping-pong.herokuapp.com']
 
 
 # Application definition
