@@ -3,5 +3,6 @@ geckodriver.log
 .vscode
 db.sqlite3
 static/*
+staticfiles/*
 
 **/migrations/
