@@ -14,13 +14,13 @@ class MatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         """Initialize form with initial winning score of 21."""
         super().__init__(*args, **kwargs)
-        self.fields['winning_score'].initial = 21
+        self.fields['winning_score'].initial = 11
 
     class Meta:
         model = Match
         fields = ['winner', 'winning_score', 'loser', 'losing_score']
         widgets = {
-            'winning_score': forms.NumberInput(attrs={'min': 21}),
+            'winning_score': forms.NumberInput(attrs={'min': 11}),
             'losing_score': forms.NumberInput(attrs={'min': 0}),
         }
 
@@ -33,17 +33,17 @@ class MatchForm(forms.ModelForm):
         loser = cleaned_data.get('loser')
         if winner == loser:
             raise ValidationError('The winner and loser must be different players.')
-        if winning_score < 21:
-            raise ValidationError('Winning score must be 21 or greater.')
+        if winning_score < 11:
+            raise ValidationError('Winning score must be 11 or greater.')
         if losing_score < 0:
             raise ValidationError('Losing score must be 0 or greater.')
         if winning_score - losing_score < 2:
             raise ValidationError(
                 'Losing score must be less than the winning score by at least 2 points.'
             )
-        if winning_score > 21 and winning_score - losing_score != 2:
+        if winning_score > 11 and winning_score - losing_score != 2:
             raise ValidationError(
-                'Deuce game! Winner must win by exactly 2 points when above 21.'
+                'Deuce game! Winner must win by exactly 2 points when above 11.'
             )
 
 
