@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-import dj_database_url
+import django_heroku
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +31,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 DEFAULT_ALLOWED_HOSTS = '127.0.0.1 localhost 0.0.0.0'
-ALLOWED_HOSTS = ['converge-ping-pong.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', 'converge-ping-pong.herokuapp.com']# ['converge-ping-pong.herokuapp.com', 'localhost']
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',
     'leaderboard',
 ]
 
@@ -53,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'pongboard.urls'
@@ -133,5 +136,8 @@ STATIC_URL = '/static/'
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
 
-# Configure database according to env
-DATABASES['default'].update(dj_database_url.config(conn_max_age=500))
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
