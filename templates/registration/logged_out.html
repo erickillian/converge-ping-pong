@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>PongBoard Login</title>
-    </head>
+{% extends "base.html" %}
 
-    <body>
-        <p>Logged out!</p>  
 
-        <a href="{% url 'login'%}">Click here to login again.</a>
-    </body>
+{% block title %} 
+Converge PongBoard
+{% endblock %}
+
+{% block content %}
+    <p>Logged out!</p>  
+
+    <a href="{% url 'login'%}">Click here to login again.</a>
+{% endblock %}

@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 DEFAULT_ALLOWED_HOSTS = '127.0.0.1 localhost 0.0.0.0'
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', 'converge-ping-pong.herokuapp.com']# ['converge-ping-pong.herokuapp.com', 'localhost']
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
+    'pongboard',
     'leaderboard',
 ]
 

@@ -1,88 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% load leaderboard_extras %}
+{% extends "base.html" %}
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Converge Technologies PongBoard</title>
-    </head>
 
-    <body>
-        <h1>Converge Technologies PongBoard</h1>
+{% block title %} 
+Converge PongBoard
+{% endblock %}
 
-        {% if user.is_authenticated %}
-            <a id='logout-link' href="{% url 'logout' %}">Logout</a>
-            <form id="player-form" action="/" method="POST">
-                <fieldset>
-                    <legend>Add player:</legend>
-                    {% csrf_token %}
-                    {{ player_form.as_p }}
-                    <input type="submit" value="Add Player">
-                </fieldset>
-            </form>
+{% block extracontent %} 
+{% load leaderboard_extras %}
+{% endblock %}
 
-            <form id="match-form" action="/" method="POST">
-                <fieldset>
-                    <legend>Submit match:</legend>
-                    {% csrf_token %}
-                    {{ match_form.as_p }}
-                    <input type="submit" value="Submit Match">
-                </fieldset>
-            </form>
-        {% else %}
-            <a id='login-link' href="{% url 'login' %}">Login</a>
-        {% endif %}
+{% block content %}
+    <h1>Converge Technologies PongBoard</h1>
 
-        <table id="leaderboard">
-            <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Rating</th>
-                <th>GP</th>
-                <th>W</th>
-                <th>L</th>
-                <th>Win%</th>
-                <th>PPG</th>
-                <th>AvgDiff</th>
+    {% if user.is_authenticated %}
+        <a id='logout-link' href="{% url 'logout' %}">Logout</a>
+        <form id="player-form" action="/" method="POST">
+            <fieldset>
+                <legend>Add player:</legend>
+                {% csrf_token %}
+                {{ player_form.as_p }}
+                <input type="submit" value="Add Player">
+            </fieldset>
+        </form>
+
+        <form id="match-form" action="/" method="POST">
+            <fieldset>
+                <legend>Submit match:</legend>
+                {% csrf_token %}
+                {{ match_form.as_p }}
+                <input type="submit" value="Submit Match">
+            </fieldset>
+        </form>
+    {% else %}
+        <a id='login-link' href="{% url 'login' %}">Login</a>
+    {% endif %}
+
+    <table id="leaderboard">
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Rating</th>
+            <th>GP</th>
+            <th>W</th>
+            <th>L</th>
+            <th>Win%</th>
+            <th>PPG</th>
+            <th>AvgDiff</th>
+        </tr>
+        {% for ranked_player in ranked_players %}
+            <tr id='player-ranking'>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ ranked_player.player.full_name }}</td>
+                <td>{{ ranked_player.rating }}</td>
+                <td>{{ ranked_player.games_played }}</td>
+                <td>{{ ranked_player.wins }}</td>
+                <td>{{ ranked_player.losses }}</td>
+                <td>{{ ranked_player.win_percent|percentage:1 }}</td>
+                <td>{{ ranked_player.points_per_game|floatformat }}</td>
+                <td>{{ ranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
             </tr>
-            {% for ranked_player in ranked_players %}
-                <tr id='player-ranking'>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ ranked_player.player.full_name }}</td>
-                    <td>{{ ranked_player.rating }}</td>
-                    <td>{{ ranked_player.games_played }}</td>
-                    <td>{{ ranked_player.wins }}</td>
-                    <td>{{ ranked_player.losses }}</td>
-                    <td>{{ ranked_player.win_percent|percentage:1 }}</td>
-                    <td>{{ ranked_player.points_per_game|floatformat }}</td>
-                    <td>{{ ranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
-                </tr>
-            {% endfor %}
-            {% for unranked_player in unranked_players %}
-                <tr id='player-ranking'>
-                    <td>N/A</td>
-                    <td>{{ unranked_player.player.full_name }}</td>
-                    <td>{{ unranked_player.rating }}</td>
-                    <td>{{ unranked_player.games_played }}</td>
-                    <td>{{ unranked_player.wins }}</td>
-                    <td>{{ unranked_player.losses }}</td>
-                    <td>{{ unranked_player.win_percent|percentage:1 }}</td>
-                    <td>{{ unranked_player.points_per_game|floatformat }}</td>
-                    <td>{{ unranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% endfor %}
+        {% for unranked_player in unranked_players %}
+            <tr id='player-ranking'>
+                <td>N/A</td>
+                <td>{{ unranked_player.player.full_name }}</td>
+                <td>{{ unranked_player.rating }}</td>
+                <td>{{ unranked_player.games_played }}</td>
+                <td>{{ unranked_player.wins }}</td>
+                <td>{{ unranked_player.losses }}</td>
+                <td>{{ unranked_player.win_percent|percentage:1 }}</td>
+                <td>{{ unranked_player.points_per_game|floatformat }}</td>
+                <td>{{ unranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 
-        {% if unranked_players %}
-            <p id='unranked-warning'>Note: you must play a minimum of 5 games before being ranked.</p>
-        {% endif %}
+    {% if unranked_players %}
+        <p id='unranked-warning'>Note: you must play a minimum of 5 games before being ranked.</p>
+    {% endif %}
 
-        <ul id="recent-matches" list-style-type="none">
-            {% for match in recent_matches %}
-                <li>{{ match.description }}</li>
-            {% endfor %}
-        </ul>
-        <a id="all-matches-link" href="{% url 'all_matches' %}">See all matches</a>
+    <ul id="recent-matches" list-style-type="none">
+        {% for match in recent_matches %}
+            <li>{{ match.description }}</li>
+        {% endfor %}
+    </ul>
+    <a id="all-matches-link" href="{% url 'all_matches' %}">See all matches</a>
 
-    </body>
+{% endblock %}
