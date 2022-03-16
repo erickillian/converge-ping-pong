@@ -2,21 +2,26 @@
 
 
 {% block title %} 
-Converge PongBoard
+Converge PongBoard Matches
 {% endblock %}
 
 {% block content %}
-    <h1>All Matches</h1>
+<main>
+<div class="container">    
+    <h1 class="text-center">Matches</h1>
 
     <a id="home-page-link" href="{% url 'home' %}">Back to leaderboard</a>
 
-    <table id="matches">
-        <tr>
-            <th>Date</th>
-            <th>Winner</th>
-            <th>Loser</th>
-            <th>Score</th>
-        </tr>
+    <table class="table" id="matches">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Winner</th>
+                <th>Loser</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for match in matches %}
             <tr id='match'>
                 <td>{{ match.date }}</td>
@@ -25,6 +30,7 @@ Converge PongBoard
                 <td>{{ match.score }}</td>
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 
     <span id="paginator">
@@ -40,4 +46,6 @@ Converge PongBoard
             <a id="next-page-link" href="{% url 'all_matches' %}?page={{ matches.next_page_number }}">Next</a>
         {% endif %}
     </span>
+    </div>
+</main>
 {% endblock %}

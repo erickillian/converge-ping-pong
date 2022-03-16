@@ -40,7 +40,6 @@ class Match(models.Model):
     @staticmethod
     def get_recent_matches(num_matches: int):
         """Get specified number of recent matches in descending date."""
-        print("Hello World")
         recent_matches = Match.objects.all().order_by('-datetime')
         if recent_matches is not None:
             recent_matches = recent_matches[0:num_matches]

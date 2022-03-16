@@ -2,7 +2,7 @@
 
 
 {% block title %} 
-Converge PongBoard
+Converge PongBoard Leaderboard
 {% endblock %}
 
 {% block extracontent %} 
@@ -10,80 +10,113 @@ Converge PongBoard
 {% endblock %}
 
 {% block content %}
-    <h1>Converge Technologies PongBoard</h1>
 
-    {% if user.is_authenticated %}
-        <a id='logout-link' href="{% url 'logout' %}">Logout</a>
-        <form id="player-form" action="/" method="POST">
-            <fieldset>
-                <legend>Add player:</legend>
-                {% csrf_token %}
-                {{ player_form.as_p }}
-                <input type="submit" value="Add Player">
-            </fieldset>
-        </form>
+<main>
+    <div class="container">       
+        {% if user.is_authenticated %}
+            <form id="player-form" action="/" method="POST">
+                <fieldset>
+                    <legend>Add player:</legend>
+                    {% csrf_token %}
+                    {{ player_form.as_p }}
+                    <input type="submit" value="Add Player">
+                </fieldset>
+            </form>
 
-        <form id="match-form" action="/" method="POST">
-            <fieldset>
-                <legend>Submit match:</legend>
-                {% csrf_token %}
-                {{ match_form.as_p }}
-                <input type="submit" value="Submit Match">
-            </fieldset>
-        </form>
-    {% else %}
-        <a id='login-link' href="{% url 'login' %}">Login</a>
-    {% endif %}
+            <form id="match-form" action="/" method="POST">
+                <fieldset>
+                    <legend>Submit match:</legend>
+                    {% csrf_token %}
+                    {{ match_form.as_p }}
+                    <input type="submit" value="Submit Match">
+                </fieldset>
+            </form>
+        {% endif %}
 
-    <table id="leaderboard">
-        <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Rating</th>
-            <th>GP</th>
-            <th>W</th>
-            <th>L</th>
-            <th>Win%</th>
-            <th>PPG</th>
-            <th>AvgDiff</th>
-        </tr>
-        {% for ranked_player in ranked_players %}
-            <tr id='player-ranking'>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ ranked_player.player.full_name }}</td>
-                <td>{{ ranked_player.rating }}</td>
-                <td>{{ ranked_player.games_played }}</td>
-                <td>{{ ranked_player.wins }}</td>
-                <td>{{ ranked_player.losses }}</td>
-                <td>{{ ranked_player.win_percent|percentage:1 }}</td>
-                <td>{{ ranked_player.points_per_game|floatformat }}</td>
-                <td>{{ ranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
-            </tr>
-        {% endfor %}
-        {% for unranked_player in unranked_players %}
-            <tr id='player-ranking'>
-                <td>N/A</td>
-                <td>{{ unranked_player.player.full_name }}</td>
-                <td>{{ unranked_player.rating }}</td>
-                <td>{{ unranked_player.games_played }}</td>
-                <td>{{ unranked_player.wins }}</td>
-                <td>{{ unranked_player.losses }}</td>
-                <td>{{ unranked_player.win_percent|percentage:1 }}</td>
-                <td>{{ unranked_player.points_per_game|floatformat }}</td>
-                <td>{{ unranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+        {% if num_ranked_players >= 3 %}
+            
+            <canvas id="top_players" width="10" height="6"></canvas>
 
-    {% if unranked_players %}
-        <p id='unranked-warning'>Note: you must play a minimum of 5 games before being ranked.</p>
-    {% endif %}
+            {{ top_three_names|json_script:"top_three_names" }}
+            {{ top_three_scores|json_script:"top_three_scores" }}
+            <script id="top_players_graph" type="text/javascript" src="/static/js/top_players_graph.js">
 
-    <ul id="recent-matches" list-style-type="none">
-        {% for match in recent_matches %}
-            <li>{{ match.description }}</li>
-        {% endfor %}
-    </ul>
-    <a id="all-matches-link" href="{% url 'all_matches' %}">See all matches</a>
 
+            </script>
+
+        {% endif %}
+
+        <table class="table" id="leaderboard">
+            <thead>
+                <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">GP</th>
+                    <th scope="col">W</th>
+                    <th scope="col">L</th>
+                    <th scope="col">Win%</th>
+                    <th scope="col">PPG</th>
+                    <th scope="col">AvgDiff</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for ranked_player in ranked_players %}
+                <tr id='player-ranking'>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ ranked_player.player.full_name }}</td>
+                    <td>{{ ranked_player.rating }}</td>
+                    <td>{{ ranked_player.games_played }}</td>
+                    <td>{{ ranked_player.wins }}</td>
+                    <td>{{ ranked_player.losses }}</td>
+                    <td>{{ ranked_player.win_percent|percentage:1 }}</td>
+                    <td>{{ ranked_player.points_per_game|floatformat }}</td>
+                    <td>{{ ranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
+                </tr>
+            {% endfor %}
+            {% for unranked_player in unranked_players %}
+                <tr id='player-ranking'>
+                    <td>N/A</td>
+                    <td>{{ unranked_player.player.full_name }}</td>
+                    <td>{{ unranked_player.rating }}</td>
+                    <td>{{ unranked_player.games_played }}</td>
+                    <td>{{ unranked_player.wins }}</td>
+                    <td>{{ unranked_player.losses }}</td>
+                    <td>{{ unranked_player.win_percent|percentage:1 }}</td>
+                    <td>{{ unranked_player.points_per_game|floatformat }}</td>
+                    <td>{{ unranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if unranked_players %}
+            <p id='unranked-warning'>Note: you must play a minimum of 5 games before being ranked.</p>
+        {% endif %}
+
+        <hr/>
+
+        <h3 class="text-center">Match Feed</h3>
+
+        <ul class="list-group list-group-dividered list-group-full">
+            {% for match in recent_matches %}
+            <li class="list-group-item">
+              <div class="media">
+                <div class="media-left">
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    {{ match.winner }} defeated {{ match.loser }} {{ match.score }}
+                  </h4>
+                  <small>{{ match.date }}</small>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        <a id="all-matches-link" href="{% url 'all_matches' %}">See all matches</a>
+
+        <h6><a href="https://www.pongfit.org/official-rules-of-table-tennis">Rules</a></h6>
+    </div>
+</main>
 {% endblock %}

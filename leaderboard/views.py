@@ -4,14 +4,18 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from leaderboard.models import Match, PlayerRating
 from leaderboard.forms import MatchForm, PlayerForm
 
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core import serializers
+
 
 def home_page(request):
     """Render view for home page."""
     recent_matches = Match.get_recent_matches(num_matches=20)
-    print(recent_matches)
     rated_players = PlayerRating.objects.all().order_by('-rating')
     ranked_players = [player for player in rated_players if player.games_played >= 5]
     unranked_players = [player for player in rated_players if player.games_played < 5]
+    num_ranked_players = len(ranked_players)
     match_form = MatchForm()
     player_form = PlayerForm()
     if request.method == 'POST':
@@ -25,6 +29,14 @@ def home_page(request):
             if player_form.is_valid():
                 player_form.save()
                 return redirect('/')
+
+    if num_ranked_players >= 3:
+        top_three_names = [player.player.full_name for player in rated_players[:3]]
+        top_three_scores = [player.rating for player in rated_players[:3]]
+    else:
+        top_three_names = None
+        top_three_scores = None
+        
     return render(
         request,
         'home.html',
@@ -33,7 +45,10 @@ def home_page(request):
             'match_form': match_form,
             'player_form': player_form,
             'ranked_players': ranked_players,
-            'unranked_players': unranked_players
+            'unranked_players': unranked_players,
+            'num_ranked_players': num_ranked_players,
+            'top_three_names': top_three_names,
+            'top_three_scores': top_three_scores,
         }
     )
 

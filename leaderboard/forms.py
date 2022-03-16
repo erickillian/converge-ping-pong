@@ -12,7 +12,7 @@ class MatchForm(forms.ModelForm):
     loser = forms.ModelChoiceField(queryset=Player.objects.order_by('first_name'))
     
     def __init__(self, *args, **kwargs):
-        """Initialize form with initial winning score of 21."""
+        """Initialize form with initial winning score of 11."""
         super().__init__(*args, **kwargs)
         self.fields['winning_score'].initial = 11
 
