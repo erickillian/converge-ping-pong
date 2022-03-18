@@ -1,7 +1,7 @@
 const top_three_names = JSON.parse(document.getElementById('top_three_names').textContent);
 const top_three_scores = JSON.parse(document.getElementById('top_three_scores').textContent);
 
-var chart = new Chart(document.getElementById('top_players'), {
+var top_players_chart = new Chart(document.getElementById('top_players'), {
     type: 'bar',
     data: {
       labels: [top_three_names[2], top_three_names[0], top_three_names[1]],
@@ -23,25 +23,25 @@ var chart = new Chart(document.getElementById('top_players'), {
         },
         plugins: {
             labels: {
-            render: 'image',
-            textMargin: 10,
-            images: [
-                {
-                src: 'static/trophy_bronze.png',
-                width: 100,
-                height: 100
-                },
-                {
-                    src: 'static/trophy_gold.png',
+                render: 'image',
+                textMargin: 10,
+                images: [
+                    {
+                    src: 'static/trophy_bronze.png',
                     width: 100,
-                    height: 100 
-                },
-                {
-                src: 'static/trophy_silver.png',
-                width: 100,
-                height: 100
-                },
-            ]
+                    height: 100
+                    },
+                    {
+                        src: 'static/trophy_gold.png',
+                        width: 100,
+                        height: 100 
+                    },
+                    {
+                    src: 'static/trophy_silver.png',
+                    width: 100,
+                    height: 100
+                    },
+                ]
             }
         },
         layout: {
@@ -53,14 +53,10 @@ var chart = new Chart(document.getElementById('top_players'), {
             display: false
         },
         scales: {
+            scaleShowLabels: true,
             xAxes: [{
-                
                 gridLines: {
-                    drawOnChartArea: false,
-                    drawBorder: false,
-                },
-                angleLines: {
-                    display: false
+                    display: false,
                 },
                 grid: {
                     display: false
@@ -72,11 +68,7 @@ var chart = new Chart(document.getElementById('top_players'), {
             }],
             yAxes: [{
                 gridLines: {
-                    drawOnChartArea: false,
-                    drawBorder: false,
-                },
-                angleLines: {
-                    display: false
+                    display: false,
                 },
                 ticks: {
                     suggestedMin: top_three_scores[2]*0.85,

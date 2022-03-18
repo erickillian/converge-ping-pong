@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
     
     <title>
-        Converge PongBoard
+        {% block title %}{% endblock %}
     </title>
 </head>
 <body>
@@ -22,7 +22,7 @@
           <div class="container">
                 <div>
                     <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
-                        <strong>{% block title %}{% endblock %}</strong>
+                        <strong>Converge Ping-Pong Leaderboard</strong>
                     </a>
                 </div>
                 <div>
@@ -33,7 +33,6 @@
                     <a class="btn btn-outline-light" id='logout-link' href="{% url 'logout' %}">Logout</a>
                     {% endif %}
                 </div>
-                    
           </div>
         </div>
     </header>

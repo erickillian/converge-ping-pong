@@ -4,6 +4,7 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from leaderboard.rankings import EloRating
+import json
 
 
 class Player(models.Model):
@@ -160,3 +161,18 @@ class PlayerRating(models.Model):
         """Return the win percentage."""
         win_percent = self.wins / self.games_played
         return win_percent
+
+    @property
+    def rating_history_report(self):
+        """Returns a history report of your rating."""
+        elo_rating = EloRating()
+        matches = Match.objects.all().order_by('datetime')
+        rating_history = []
+
+        for match in matches:
+            elo_rating.update_ratings(match.winner, match.loser)
+            rating_elem = {}
+            rating_elem['x'] = match.datetime.timestamp()
+            rating_elem['y'] = elo_rating.get_rating(self.player)
+            rating_history.append(rating_elem)
+        return rating_history

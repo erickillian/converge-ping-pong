@@ -18,12 +18,15 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from leaderboard.views import home_page, all_matches
+from leaderboard.views import home_page, all_matches, add_player, add_match, view_player
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', view=home_page, name='home'),
     url(r'accounts/', include('django.contrib.auth.urls')),
     url(r'matches/', view=all_matches, name='all_matches'),
+    url(r'addmatch/', view=add_match, name='add_match'),
+    url(r'addplayer/', view=add_player, name='add_player'),
+    url(r'^player/(?P<pk>[0-9]+)', view=view_player, name='view_player'),
 ]
 urlpatterns += staticfiles_urlpatterns()

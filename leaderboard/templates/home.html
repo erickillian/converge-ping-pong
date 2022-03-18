@@ -62,17 +62,18 @@ Converge PongBoard Leaderboard
             </thead>
             <tbody>
             {% for ranked_player in ranked_players %}
-                <tr id='player-ranking'>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ ranked_player.player.full_name }}</td>
-                    <td>{{ ranked_player.rating }}</td>
-                    <td>{{ ranked_player.games_played }}</td>
-                    <td>{{ ranked_player.wins }}</td>
-                    <td>{{ ranked_player.losses }}</td>
-                    <td>{{ ranked_player.win_percent|percentage:1 }}</td>
-                    <td>{{ ranked_player.points_per_game|floatformat }}</td>
-                    <td>{{ ranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
-                </tr>
+                    <tr id='player-ranking'>
+                        <td scope="col">{{ forloop.counter }}</td>
+                        <td scope="col"><a href="/player/{{ ranked_player.player.id }}">{{ ranked_player.player.full_name }}</a></td>
+                        <td scope="col">{{ ranked_player.rating }}</td>
+                        <td scope="col">{{ ranked_player.games_played }}</td>
+                        <td scope="col">{{ ranked_player.wins }}</td>
+                        <td scope="col">{{ ranked_player.losses }}</td>
+                        <td scope="col">{{ ranked_player.win_percent|percentage:1 }}</td>
+                        <td scope="col">{{ ranked_player.points_per_game|floatformat }}</td>
+                        <td scope="col">{{ ranked_player.avg_point_differential|stringformat:"+.1f" }}</td>
+                    </tr>
+                
             {% endfor %}
             {% for unranked_player in unranked_players %}
                 <tr id='player-ranking'>
@@ -94,6 +95,17 @@ Converge PongBoard Leaderboard
             <p id='unranked-warning'>Note: you must play a minimum of 5 games before being ranked.</p>
         {% endif %}
 
+
+        <hr/>
+
+        <canvas id="all_players" width="10" height="6"></canvas>
+
+        {{ names|json_script:"names" }}
+        {{ scores|json_script:"scores" }}
+        <script id="all_players" type="text/javascript" src="/static/js/all_players_graph.js">
+
+        </script>
+
         <hr/>
 
         <h3 class="text-center">Match Feed</h3>
@@ -106,7 +118,7 @@ Converge PongBoard Leaderboard
                 </div>
                 <div class="media-body">
                   <h4 class="media-heading">
-                    {{ match.winner }} defeated {{ match.loser }} {{ match.score }}
+                    <a href="/player/{{ match.winner.id }}">{{ match.winner }}</a> defeated <a href="/player/{{ match.loser.id }}">{{ match.loser }}</a> {{ match.score }}
                   </h4>
                   <small>{{ match.date }}</small>
                 </div>

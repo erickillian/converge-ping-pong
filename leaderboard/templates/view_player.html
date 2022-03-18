@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+
+{% block title %} 
+Converge PongBoard Leaderboard
+{% endblock %}
+
+{% block extracontent %} 
+{% load leaderboard_extras %}
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <h1>{{ player.full_name }}</h1>
+        <h4>Rating: {{ player_rating.rating }}</h4>
+        <h4>Games Played:  {{ player_rating.games_played }}</h4>
+       
+        <h4>Wins: {{ player_rating.wins }}</h4>
+        <h4>Losses: {{ player_rating.losses }}</h4>
+        <h4>Win Percentage: {{ player_rating.win_percent|percentage:1 }}</h4>
+        <h4>Average Points Per Game: {{ player_rating.points_per_game|floatformat }}</h4>
+        <h4>Average Point Differential: {{ player_rating.avg_point_differential|stringformat:"+.1f" }}</h4>
+        <!-- <p>{{ player_rating.rating_history_report }}</p> -->
+
+        <canvas id="player_history_graph" width="10" height="6"></canvas>
+
+        {{ player_rating.rating_history_report|json_script:"player_history" }}
+        <script id="player_history_graph" type="text/javascript" src="/static/js/player_history_graph.js"></script>
+    </div>
+</main>
+
+
+{% endblock %}

@@ -23,8 +23,8 @@ Converge PongBoard Matches
         {% for match in matches %}
             <tr id='match'>
                 <td>{{ match.date }}</td>
-                <td>{{ match.winner }}</td>
-                <td>{{ match.loser }}</td>
+                <td><a href="/player/{{ match.winner.id }}">{{ match.winner }}</a></td>
+                <td><a href="/player/{{ match.loser.id }}">{{ match.loser }}</a></td>
                 <td>{{ match.score }}</td>
             </tr>
         {% endfor %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+
+{% block title %} 
+Converge PongBoard Add Match
+{% endblock %}
+
+{% block extracontent %} 
+{% load leaderboard_extras %}
+{% endblock %}
+
+{% block content %}
+
+<main>
+    <div class="container">       
+        {% if user.is_authenticated %}
+            <form id="player-form" action="/" method="POST">
+                <fieldset>
+                    <legend>Add player:</legend>
+                    {% csrf_token %}
+                    {{ player_form.as_p }}
+                    <input type="submit" value="Add Player">
+                </fieldset>
+            </form>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

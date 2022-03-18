@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from leaderboard.models import Match, PlayerRating
+from leaderboard.models import Match, Player, PlayerRating
 from leaderboard.forms import MatchForm, PlayerForm
 
 import json
@@ -31,11 +31,15 @@ def home_page(request):
                 return redirect('/')
 
     if num_ranked_players >= 3:
-        top_three_names = [player.player.full_name for player in rated_players[:3]]
-        top_three_scores = [player.rating for player in rated_players[:3]]
+        top_three_names = [player.player.full_name for player in ranked_players[:3]]
+        top_three_scores = [player.rating for player in ranked_players[:3]]
     else:
         top_three_names = None
         top_three_scores = None
+
+
+    names = [player.player.full_name for player in ranked_players]
+    scores = [player.rating for player in ranked_players]
         
     return render(
         request,
@@ -49,6 +53,56 @@ def home_page(request):
             'num_ranked_players': num_ranked_players,
             'top_three_names': top_three_names,
             'top_three_scores': top_three_scores,
+            'names': names,
+            'scores': scores,
+        }
+    )
+
+
+def add_match(request):
+    match_form = MatchForm()
+
+    if request.method == 'POST':
+        if 'winner' in request.POST:  # only occurs for match submissions
+            match_form = MatchForm(request.POST)
+            if match_form.is_valid():
+                match_form.save()
+                return redirect('/')
+        elif 'first_name' in request.POST:  # only occurs for player submissions
+            player_form = PlayerForm(request.POST)
+            if player_form.is_valid():
+                player_form.save()
+                return redirect('/')
+
+    return render(
+        request,
+        'add_match.html',
+        context={
+            'match_form': match_form,
+        }
+    )
+
+def add_player(request):
+    player_form = PlayerForm()
+
+    if request.method == 'POST':
+        if 'winner' in request.POST:  # only occurs for match submissions
+            match_form = MatchForm(request.POST)
+            if match_form.is_valid():
+                match_form.save()
+                return redirect('/')
+        elif 'first_name' in request.POST:  # only occurs for player submissions
+            player_form = PlayerForm(request.POST)
+            if player_form.is_valid():
+                player_form.save()
+                return redirect('/')
+
+
+    return render(
+        request,
+        'add_player.html',
+        context={
+            'player_form': player_form,
         }
     )
 
@@ -69,5 +123,19 @@ def all_matches(request):
         'all_matches.html',
         context={
             'matches': matches
+        }
+    )
+
+def view_player(request, pk):
+    """Render an individual player view"""
+    player = Player.objects.get(pk=pk)
+    player_rating = PlayerRating.objects.get(player=player)
+
+    return render(
+        request,
+        'view_player.html',
+        context={
+            'player': player,
+            'player_rating': player_rating,
         }
     )
