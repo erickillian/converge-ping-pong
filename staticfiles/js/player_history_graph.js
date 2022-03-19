@@ -9,7 +9,7 @@ var top_players_chart = new Chart(document.getElementById('player_history_graph'
             fill: false,
             showLine: true,
             tension: 0,
-            pointRadius: 0,
+            pointRadius: 10,
             borderColor: 'black',
         }], 
     },

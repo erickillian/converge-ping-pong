@@ -165,10 +165,10 @@ class PlayerRating(models.Model):
     @property
     def rating_history_report(self):
         """Returns a history report of your rating."""
-        elo_rating = EloRating()
-        matches = Match.objects.all().order_by('datetime')
         rating_history = []
 
+        elo_rating = EloRating()
+        matches = Match.objects.all().order_by('datetime')
         for match in matches:
             elo_rating.update_ratings(match.winner, match.loser)
             rating_elem = {}
