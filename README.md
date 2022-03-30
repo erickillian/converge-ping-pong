@@ -1,4 +1,4 @@
-# View live site [here](converge-ping-pong.herokuapp.com)
+# View live site [here](https://converge-ping-pong.herokuapp.com/)
 
 # Pong Board
 Pong Board is the ultimate leaderboard system for ping pong. The dream is to keep track of players previous games and ultimately provide a leaderboard with an ongoing ranking system. We all have to entertain our competitive nature... time to pong!
